@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Todobackend
+spec:
+  selector:
+    app: Todobackend
+  ports:
+    - protocol: TCP
+      port: 80    # Exposing port 80 for external access
+      targetPort: 9000  # Internal port used by the app
+  type: LoadBalancer

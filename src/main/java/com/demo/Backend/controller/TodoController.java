@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/todos")
+@RequestMapping("/api")
 public class TodoController {
     @Autowired
     private TodoService todoService;
 
+    @GetMapping("/hello")
+    public String hello(){
+        return "Hello user!!";
+    }
     @GetMapping
     public List<Task> getAllTasks() {
         return todoService.getAllTasks();

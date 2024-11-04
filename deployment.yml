@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Todobackend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: Todobackend
+  template:
+    metadata:
+      labels:
+        app: Todobackend
+    spec:
+      containers:
+        - name: Todobackend
+          image: sakthisiddu1/todobackend:latest
+          ports:
+            - containerPort: 8080
