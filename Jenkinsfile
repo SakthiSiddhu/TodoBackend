@@ -1,47 +1,40 @@
 pipeline {
     agent any
-
     tools {
         maven 'Maven_3.9.9'
     }
-
     environment {
-        KUBECONFIG = '/usr/kubectl/kubrctl.cfg'
+        KUBECONFIG = '/home/ec2-user/.kube/config'
     }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/SakthiSiddhu/TodoBackend'
             }
         }
-
         stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
                     def projectName = 'todobackend'
                     def dockerTag = 'latest'
-                    def imageName = "sakthisiddu1/${projectName}:${dockerTag}"
-                    sh "docker build -t ${imageName} ."
+                    def dockerImage = "sakthisiddu1/${projectName}:${dockerTag}"
+                    sh "docker build -t ${dockerImage} ."
                 }
             }
         }
-
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhubpwd', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    sh 'docker push sakthisiddu1/todobackend:latest'
+                    sh "docker push sakthisiddu1/todobackend:latest"
                 }
             }
         }
-
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -86,7 +79,6 @@ spec:
                 }
             }
         }
-
         stage('Port Forward') {
             steps {
                 script {
@@ -97,10 +89,9 @@ spec:
             }
         }
     }
-
     post {
-        always {
-            echo 'Job completed successfully.'
+        success {
+            echo 'Deployment completed successfully!'
         }
     }
 }
