@@ -83,7 +83,8 @@ spec:
             steps {
                 script {
                     sleep 60
-                    sh 'kubectl port-forward --address 0.0.0.0 service/todobackend-service 9000:9000'
+                    sh 'kubectl port-forward --address 0.0.0.0 service/todobackend-service 9000:9000 &'
+                    sleep 120
                 }
             }
         }
